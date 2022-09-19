@@ -36,7 +36,7 @@ az sig image-definition create \
   --offer myOffer \
   --sku mySKU \
   --os-type Windows \
-  --os-state specialized
+  --os-state generalized
 ```
 
 ## 3. Create image version
@@ -62,8 +62,7 @@ First create a VM Scale Set:
 az vmss create \
 	--name devops-vmss-pool-01 \
 	--resource-group devops-runner-images-04-rg \
-	--image /subscriptions/<subscriptioId>/resourceGroups/devops-runner-images-04-rg/providers/Microsoft.Compute/galleries/mngImages01/images/Windows2022/versions/latest \
-	--specialized \
+	--image /subscriptions/<subscriptionId>/resourceGroups/devops-runner-images-04-rg/providers/Microsoft.Compute/galleries/mngImages01/images/Windows2022/versions/1.0.0 \
 	--vm-sku Standard_D2_v3 \
 	--storage-sku StandardSSD_LRS \
 	--instance-count 2 \
@@ -71,6 +70,7 @@ az vmss create \
 	--upgrade-policy-mode manual \
 	--single-placement-group false \
 	--platform-fault-domain-count 1 \
+	--admin-user azureuser
 	--load-balancer ""
 ```
 
@@ -80,4 +80,4 @@ Afterwards configure createing new [Scale Set Agent Pool in DevOps](https://lear
 
 ## License
 
-Lincensed under [MIT](LICENSE.md).
+Lincensed under [MIT](LICENSE.md) license.
