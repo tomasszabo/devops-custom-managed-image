@@ -1,4 +1,6 @@
 
+# Using managed images in VM Scale Sets for DevOps
+
 ## Prerequisites
 
 Following are prerequisites for using managed images in VM scale sets:
