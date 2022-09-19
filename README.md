@@ -8,7 +8,7 @@ Following are prerequisites for using managed images in VM scale sets:
 1. Create VHD disk image from https://github.com/actions/runner-images following [instructions](https://github.com/actions/runner-images/blob/main/docs/create-image-and-azure-resources.md). 
 
 > NOTE: This step may take 6 hours.
-2. After sucesfully creating VHD file, follow [installation instructions](#installation) bellow.
+2. After successfully creating VHD file, follow [installation instructions](#installation) bellow.
 
 
 ## Installation
@@ -76,8 +76,8 @@ az vmss create \
 
 > IMPORTANT: If you run this script using Azure CLI on Windows, you must enclose the "" in --load-balancer "" with single quotes like this: --load-balancer '""'
 
-Afterwards configure createing new [Scale Set Agent Pool in DevOps](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/scale-set-agents?view=azure-devops).
+Afterwards configure creating new [Scale Set Agent Pool in DevOps](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/scale-set-agents?view=azure-devops).
 
 ## License
 
-Lincensed under [MIT](LICENSE.md) license.
+Licensed under [MIT](LICENSE.md) license.
