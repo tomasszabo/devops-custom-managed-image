@@ -71,7 +71,7 @@ az vmss create \
   --single-placement-group false \
   --platform-fault-domain-count 1 \
   --admin-user azureuser
---load-balancer ""
+  --load-balancer ""
 ```
 
 > IMPORTANT: If you run this script using Azure CLI on Windows, you must enclose the "" in --load-balancer "" with single quotes like this: --load-balancer '""'
