@@ -1,0 +1,1 @@
+# devops-custom-managed-image
