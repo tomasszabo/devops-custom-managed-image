@@ -38,7 +38,7 @@ az sig image-definition create \
   --os-type Windows \
   --os-state generalized
 ```
-
+ 
 ## 3. Create image version
 
 Create a new version of image (using previously generated VHD file).
