@@ -1,21 +1,31 @@
 
 # Using managed images in VM Scale Sets for DevOps
 
-## Prerequisites
-
-Following are prerequisites for using managed images in VM scale sets:
-
-1. Create VHD disk image from https://github.com/actions/runner-images following [instructions](https://github.com/actions/runner-images/blob/main/docs/create-image-and-azure-resources.md). 
-
-> NOTE: This step may take 6 hours.
-2. After successfully creating VHD file, follow [installation instructions](#installation) bellow.
 
 
-## Installation
+## 1. Create VHD
 
-## 1. Create Image gallery 
+VHD is created from [runner-images GitHub repository](https://github.com/actions/runner-images) using their [instructions](https://github.com/actions/runner-images/blob/main/docs/create-image-and-azure-resources.md). Following is a quick overview of steps needed to build VHD:
 
-Create an image gallery for storing images for VM.
+1. Clone [runner-images GitHub repository](https://github.com/actions/runner-images).
+2. Install [prerequisites](https://github.com/actions/runner-images/blob/main/docs/create-image-and-azure-resources.md#prepare-environment-and-image-deployment).
+3. Start PowerShell in cloned directory
+4. Import module `GenerateResourcesAndImage`
+```PowerShell
+Import-Module .\helpers\GenerateResourcesAndImage.ps1    
+```
+5. Generate VHD
+```PowerShell
+GenerateResourcesAndImage -SubscriptionId {YourSubscriptionId} -ResourceGroupName "myTestResourceGroup" -ImageGenerationRepositoryRoot "$pwd" -ImageType Windows2022 -AzureLocation "East US"
+```
+
+Full instructions with options can be found in [runner-images instructions](https://github.com/actions/runner-images/blob/main/docs/create-image-and-azure-resources.md). 
+
+> NOTE: This step may take 6 or more hours.
+
+## 2. Create Image gallery 
+
+Create an image gallery for storing images for virtual machines in VM Scale Set:
 
 ```bash
 az sig create \
@@ -23,9 +33,9 @@ az sig create \
   --gallery-name mngImages01
 ```
 
-## 2. Create image definition
+## 3. Create image definition
 
-Create image definition (e.g. _Windows 2022_, _Ubuntu_, etc.)
+Create image definition (e.g. _Windows2022_, _Ubuntu_, etc.):
 
 ```bash
 az sig image-definition create \
@@ -39,9 +49,9 @@ az sig image-definition create \
   --os-state generalized
 ```
  
-## 3. Create image version
+## 4. Create image version from VHD
 
-Create a new version of image (using previously generated VHD file).
+Create a new version of image (using previously generated VHD file):
 
 ```bash
 az sig image-version create \
@@ -52,11 +62,11 @@ az sig image-version create \
   --os-vhd-storage-account /subscriptions/<subscriptionId>/resourceGroups/imageGroups/providers/Microsoft.Storage/storageAccounts/devopsrunnerimages04001 \
   --os-vhd-uri https://devopsrunnerimages04001.blob.core.windows.net/system/Microsoft.Compute/Images/images/packer-osDisk.vhd
 ```
-> NOTE: This step may take 30 minutes
+> NOTE: This step may take 30 or more minutes
 
-## 4. Create VM Scale Set
+## 5. Create VM Scale Set
 
-First create a VM Scale Set:
+First create a VM Scale Set using previously created image:
 
 ```bash
 az vmss create \
