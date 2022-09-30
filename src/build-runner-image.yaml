@@ -1,0 +1,38 @@
+parameters:
+  - name: resourceGroup
+    type: string
+  - name: location
+    type: string
+    default: 'westeurope'
+  - name: imageType
+    type: string
+    default: 'Windows2022'
+
+variables:
+  - group: 'build-runner-image'
+ 
+jobs:
+  - job: BuildRunnerImage
+    displayName: Build Runner Image
+    timeoutInMinutes: 0
+    pool:
+      name: 'vmss-pool'
+    steps:
+      - checkout: self
+      - task: PowerShell@2
+        name: BuildScript
+        displayName: "Calling build script"
+        inputs:
+          targetType: filePath
+          filePath: bin/build-runner-image.ps1 
+          arguments: >
+            -resourceGroup ${{parameters.resourceGroup}} 
+            -location ${{parameters.location}} 
+            -imageType ${{parameters.imageType}} 
+            -subscriptionId $(subscriptionId)
+            -azureClientId $(azureClientId)
+            -azureClientSecret "$(azureClientSecret)"
+            -azureTenantId $(azureTenantId)
+          errorActionPreference: stop
+          pwsh: true
+     
