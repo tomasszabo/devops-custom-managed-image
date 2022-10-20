@@ -43,7 +43,7 @@ jobs:
     inputs:
       targetType: filePath
       filePath: ./images.CI/linux-and-win/build-image.ps1
-      arguments: -ResourcesNamePrefix $(Build.BuildId) `
+      arguments: -ResourcesNamePrefix "${{ parameters.image_type }}-$(Build.BuildId)" `
                         -ClientId $(CLIENT_ID) `
                         -ClientSecret $(CLIENT_SECRET) `
                         -TemplatePath $(TemplatePath) `
