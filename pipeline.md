@@ -33,7 +33,7 @@ Create build pipeline in DevOps:
 4. Choose branch `main` and path `/images.CI/linux-and-win/azure-pipelines/windows2022.yml`.
 5. We need to configure variable group prior to running this pipeline, therefore under button `Run` choose option `Save`. 
 
-> NOTE: Only `windows2022.yml` was adapted for building images using this manual. Other YAML files must be adapted prior running DevOps pipelines.
+> NOTE: Only `windows2022.yml` and `windows2019.yaml` were adapted for building images using this manual. Other YAML files must be adapted prior running DevOps pipelines.
 
 ## 4. Configure variable group
 
