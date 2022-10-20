@@ -74,22 +74,33 @@ jobs:
                         -PrintTopNLongest 25
 
   - task: PublishBuildArtifacts@1
-    displayName: 'Publish artifacts'
+    displayName: 'Publish Packer log'
     inputs:
       pathToPublish: $(Build.ArtifactStagingDirectory)
       artifactName: PackerLog
 
-  - task: PowerShell@2
-    displayName: 'Create release for VM deployment'
+  - task: AzurePowerShell@5
+    displayName: 'Create managed image'
     inputs:
-      targetType: filePath
-      filePath: ./images.CI/linux-and-win/create-release.ps1
-      arguments: -BuildId $(Build.BuildId) `
-                        -Organization $(RELEASE_TARGET_ORGANIZATION) `
-                        -DefinitionId $(RELEASE_TARGET_DEFINITION_ID) `
-                        -Project $(RELEASE_TARGET_PROJECT) `
-                        -ImageName ${{ parameters.image_type }} `
-                        -AccessToken $(RELEASE_TARGET_TOKEN)
+      azureSubscription: ${{ parameters.service_connection }}
+      ScriptType: 'InlineScript'
+      Inline: |
+        $vhd = az storage blob list -c system --account-name $(AZURE_STORAGE_ACCOUNT) --auth-mode login | ConvertFrom-Json | Where-Object {$_.name -like "*$(Build.BuildId)*.vhd"} | sort-object {[System.DateTime]::ParseExact($_.properties.creationTime,"MM/dd/yyyy HH:mm:ss",$null)} -Descending | Select-Object -first 1
+
+        $url = "https://$(AZURE_STORAGE_ACCOUNT).blob.core.windows.net/system/$($vhd.name)"
+        Write-Host "Url: " $url
+
+        $storageAccountId = az storage account show -n $(AZURE_STORAGE_ACCOUNT) --query id  --output tsv
+
+        az sig image-version create `
+        --resource-group $(AZURE_RESOURCE_GROUP) `
+        --gallery-name $(AZURE_GALLERY) `
+        --gallery-image-definition ${{ parameters.image_type }} `
+        --gallery-image-version 1.0.$(Build.BuildId) `
+        --os-vhd-storage-account $storageAccountId `
+        --os-vhd-uri $url
+      azurePowerShellVersion: LatestVersion
+      pwsh: true
 
   - task: PowerShell@2
     displayName: 'Clean up resources'

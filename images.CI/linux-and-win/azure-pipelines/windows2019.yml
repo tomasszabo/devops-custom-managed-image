@@ -1,20 +1,14 @@
-schedules:
-- cron: "0 0 * * *"
-  displayName: Daily
-  branches:
-    include:
-    - main
-  always: true
-
 trigger: none
-pr:
-  autoCancel: true
-  branches:
-    include:
-    - main
+
+parameters:
+- name: service_connection
+  displayName: 'Service Connection' 
+  type: string
+  default: ''
 
 jobs:
 - template: image-generation.yml
   parameters:
     image_type: windows2019
     image_readme_name: Windows2019-Readme.md
+    service_connection: ${{ parameters.service_connection }}

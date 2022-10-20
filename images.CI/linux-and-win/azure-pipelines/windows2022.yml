@@ -1,11 +1,14 @@
 trigger: none
 
-variables:
-- name: RELEASE_TARGET_TOKEN
-  value: $(System.AccessToken)
+parameters:
+- name: service_connection
+  displayName: 'Service Connection' 
+  type: string
+  default: ''
 
 jobs:
 - template: image-generation.yml
   parameters:
     image_type: windows2022
     image_readme_name: Windows2022-Readme.md
+    service_connection: ${{ parameters.service_connection }}
